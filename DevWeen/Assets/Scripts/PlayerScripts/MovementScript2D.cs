@@ -1,12 +1,9 @@
-
 /*
     This script is a 2D movement script that can be used for any 2D game.
     It handles movement, jumping, gravity, and collisions with terrain.
     It is designed to be easy to use and modify to suit your needs.
     It is designed to be used on a 2D character with a box collider.
 */
-
-
 using System;
 using System.Linq;
 using UnityEngine;
@@ -17,6 +14,7 @@ using Unity.Mathematics;
 [RequireComponent(typeof(BoxCollider2D))]
 public class MovementScript2D : MonoBehaviour
 {
+    
     private const int BIG_NUMBER = 1000000;
 
     #region Variables

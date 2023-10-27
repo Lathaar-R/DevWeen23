@@ -18,10 +18,10 @@ public class EnemyStateMachine : MonoBehaviour
     //variaveis publicas
 
     //propriedades publicas
-    private State CurrentState => currentState;
-    private WalkingState WalkingState => walkingState;
-    private FiringState FiringState => firingState;
-    private GrabbedState GrabbedState => grabbedState;
+    public State CurrentState => currentState;
+    public WalkingState WalkingState => walkingState;
+    public FiringState FiringState => firingState;
+    public GrabbedState GrabbedState => grabbedState;
     public Rigidbody2D Rb => rb;
 
     #endregion
