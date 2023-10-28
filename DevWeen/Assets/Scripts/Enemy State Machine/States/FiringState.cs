@@ -22,5 +22,18 @@ public class FiringState : State
     public override void Update()
     {
         Debug.Log("Atualizando estado de atirar");
+        GameObject player = GameObject.Find("Player");
+        if (player != null)
+        {
+            Vector2 playerPosition = player.transform.position;
+            if(Mathf.Abs(playerPosition.x - stateMachine.Rb.position.x) < stateMachine.MinDistanceToPlayer)
+            {
+                Debug.Log("Atirando");
+            }
+            else
+            {
+                stateMachine.ChangeState(stateMachine.WalkingState);
+            }
+        }
     }
 }

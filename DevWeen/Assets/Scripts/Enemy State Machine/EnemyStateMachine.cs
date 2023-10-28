@@ -11,9 +11,12 @@ public class EnemyStateMachine : MonoBehaviour
     private WalkingState walkingState;
     private FiringState firingState;
     private GrabbedState grabbedState;
+    private GameObject player;
 
     //Serialized Fields
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private float speed = 5f;
+    [SerializeField] private float minDistanceToPlayer = 3f;
 
     //variaveis publicas
 
@@ -23,6 +26,8 @@ public class EnemyStateMachine : MonoBehaviour
     public FiringState FiringState => firingState;
     public GrabbedState GrabbedState => grabbedState;
     public Rigidbody2D Rb => rb;
+    public float Speed => speed;
+    public float MinDistanceToPlayer => minDistanceToPlayer;
 
     #endregion
 

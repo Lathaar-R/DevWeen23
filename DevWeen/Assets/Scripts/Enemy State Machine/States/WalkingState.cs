@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class WalkingState : State
@@ -22,11 +24,20 @@ public class WalkingState : State
 
     public override void Update()
     {
-        Debug.Log("Atualizando estado de andar");
-        //if ta longe o suficiente
-        //int x = meu vetor - o do jogador
-        // if x > 1
-        // dir = abs(x)
-        stateMachine.Rb.MovePosition(Vector2.right * Time.deltaTime + stateMachine.Rb.position);
+        //Debug.Log("Atualizando estado de andar");
+        GameObject player = GameObject.Find("Player");
+        if (player != null)
+        {
+            float distanceToPlayer = player.transform.position.x - stateMachine.Rb.position.x;
+            if(Mathf.Abs(distanceToPlayer) > stateMachine.MinDistanceToPlayer)
+            {
+                float direction = distanceToPlayer > 0 ? 1f : -1f;
+                stateMachine.Rb.MovePosition(Vector2.right * direction * stateMachine.Speed * Time.deltaTime + stateMachine.Rb.position);
+            }
+            else
+            {
+                stateMachine.ChangeState(stateMachine.FiringState);
+            }
+        }
     }
 }
