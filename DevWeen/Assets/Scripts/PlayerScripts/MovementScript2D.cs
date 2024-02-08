@@ -27,6 +27,7 @@ public class MovementScript2D : MonoBehaviour
     private float           _apexSpeedModifier;
     private Vector2         _movementInput;
     private bool            _jumpInput;
+    private PlayerController _playerController;
     
     [Space]
     [Header("Movement Variables")]
@@ -77,10 +78,13 @@ public class MovementScript2D : MonoBehaviour
     private void Start()
     {
         _collider = GetComponent<BoxCollider2D>();
+        _playerController = GetComponent<PlayerController>();
     }
 
     private void Update()
     {
+        if(_playerController.IsDead) return;
+
         //Get Inputs
         GetInputs();
 
@@ -120,8 +124,12 @@ public class MovementScript2D : MonoBehaviour
         transform.position += _movement;
     }
 
+    float timeToPass;
+
     private void HandleCollisions()
     {
+        timeToPass -= Time.deltaTime;
+
         if (_horizontal.Col)
         {
             _jumpApexYPoint = BIG_NUMBER;
@@ -131,8 +139,26 @@ public class MovementScript2D : MonoBehaviour
 
         if(_vertical.Col)
         {
+            if(_vertical.Hit.collider.gameObject.layer == LayerMask.NameToLayer("PassFloor"))
+            {
+                if(Keyboard.current.sKey.wasPressedThisFrame)
+                {
+                    _vertical.Hit.collider.gameObject.layer = LayerMask.NameToLayer("PassFloor");
+                    _movement.y = 0.15f;
+                    _speed.y = 0.1f;
+                    timeToPass = 0.3f;
+                    return;
+                }
+
+                if(_vertical.Hit.collider.gameObject.layer == LayerMask.NameToLayer("PassFloor")
+                    && timeToPass > 0)
+                {
+                    return;
+            }
+            }
+
             _jumpApexYPoint = BIG_NUMBER;
-            _caoyteTimer = cayoteTime;
+            if(_vertical.Hit.normal == Vector2.up) _caoyteTimer = cayoteTime;
             _movement.y = (_vertical.Hit.distance - _collider.bounds.extents.y) * Mathf.Sign(transform.position.y - _vertical.Hit.point.y);
             _speed.y = 0;
             //Debug.Log("Vertical Collision");
@@ -256,6 +282,7 @@ public class MovementScript2D : MonoBehaviour
                 _speed.y = -math.sqrt(2 * gravityValue * jumpHeight);
                 //calculate the jump apex y distance
                 _jumpApexYPoint = _speed.y * _speed.y / (2 * gravityValue) + transform.position.y;
+                GameMenagerScript.Instance.PlayAudio("jumping");
                 return;
             }
             
@@ -324,7 +351,8 @@ public class MovementScript2D : MonoBehaviour
                 //Check if the angle is too steep
                 if (Vector2.Angle(Vector2.up * Mathf.Sign(Speed.y), ray.normal) < maxAngle)
                 {
-                    //Debug.Log("aa");
+//                    Debug.Log(ray.collider.gameObject.layer);
+                    if(_speed.y < 0 && ray.collider.gameObject.layer == LayerMask.NameToLayer("PassFloor")) return;
                     _vertical.Col = true;
                     _vertical.Hit = ray;
                 }
@@ -347,11 +375,17 @@ public class MovementScript2D : MonoBehaviour
         return hits;
     }
 
+    public void SetSpeed(Vector3 speed)
+    {
+        _speed = speed;
+    }
+
     private void GetInputs()
     {
         inputs.input = Vector2.zero;
         inputs.input = _movementInput;
-
+        //_movementInput = Vector2.zero;
+    
         inputs.jump = _jumpInput;
         _jumpInput = false;
     }

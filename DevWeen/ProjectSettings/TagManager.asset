@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Enemy
+  - Obj
   layers:
   - Default
   - TransparentFX
@@ -12,13 +14,13 @@ TagManager:
   - Water
   - UI
   - Floor
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Enemy
+  - GrabbedEnemy
+  - Level
+  - Floor2
+  - PassFloor
+  - Objs
+  - ObjP
   - 
   - 
   - 
